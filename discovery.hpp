@@ -15,7 +15,7 @@ class DiscoverySender {
 
     void setup(IPAddress ip, const char* devClass, const char* devId) {
       char c_desc[1024];
-      sprintf(c_desc, "%s %s DEVICE1", devClass, devId);
+      sprintf(c_desc, "%s %s DEVICE", devClass, devId);
       if (discoveryPacket != NULL)
         free(discoveryPacket);
       discoveryPacket = (char*)(malloc(strlen(c_desc)));
@@ -28,14 +28,13 @@ class DiscoverySender {
     };
 
     void reset() {
-      ready = false;
-      //udp.stop();
+      ready = false;      
     };
 
 
     void send() {
       long t = millis();
-      if (t-lastSendDiscovery<100)
+      if (t-lastSendDiscovery<1000)
         return;
 
       udp.beginPacketMulticast(mcastIp,27015,localIp);
