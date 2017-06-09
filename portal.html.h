@@ -89,14 +89,14 @@ R"(
         }
                     
         function onLoad(){
-            setTimeout(loadData,1000);
-            //loadData();
+            setTimeout(loadData,1000);            
         }
             
         function saveData(){
             setLoad(false);
             setTimeout(save,1000);
         }
+        
         function save(){
             setLoad(false);
             r = {

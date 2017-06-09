@@ -1,5 +1,5 @@
 #define DOOMSDAYINO_USE_AS_LIB
-#include "DoomsDayIno.h"
+#include <DoomsDayIno.h>
 #include "captive_portal.hpp"
 #include "wifi.hpp"
 
@@ -34,21 +34,22 @@ void loadsConfig(Config* cfg) {
   }
 
   // Allocate a buffer to store contents of the file.
-  std::unique_ptr<char[]> buf(new char[size]);
-
+  char* buff = (char*)(malloc(size));
+  //std::unique_ptr<char[]> buf(new char[size]);
+  
   // We don't use String here because ArduinoJson library requires the input
   // buffer to be mutable. If you don't use ArduinoJson, you may as well
   // use configFile.readString instead.
-  configFile.readBytes(buf.get(), size);
+  configFile.readBytes(buff, size);
 
   StaticJsonBuffer<200> jsonBuffer;
-  JsonObject& json = jsonBuffer.parseObject(buf.get());
-
+  JsonObject& json = jsonBuffer.parseObject(buff);
+  //memset(buf.get(),0,size);
   if (!json.success()) {
     Serial.println("Failed to parse config file");
     return ;
   }
-
+  
   cfg->ssid = json["ssid"];
   cfg->pass = json["pass"];
   cfg->pincode = json["pincode"];
@@ -58,11 +59,14 @@ void loadsConfig(Config* cfg) {
 
   // Real world application would store these values in some variables for
   // later use.
-
-  Serial.print("Loaded serverName: ");
-  //  Serial.println(serverName);
-  Serial.print("Loaded accessToken: ");
-  //  Serial.println(accessToken);
+  //Serial.println(buf.get());
+  Serial.print("Loaded pincode ");
+  Serial.println(strlen(cfg->pincode));
+  Serial.println(cfg->pincode);
+  Serial.print("Loaded ssid ");
+  Serial.println(cfg->ssid);
+  Serial.print("Loaded pass ");
+  Serial.println(cfg->pass);
   //  return true;
 }
 
@@ -105,18 +109,26 @@ int chipId = ESP.getChipId();
 int flashChipId = ESP.getFlashChipId();
 
 void setup_prod() {
+  endpoint = new Endpoint();
+  if (!SPIFFS.begin()) {
+    Serial.println("Failed to mount file system");
+    for (;;){
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(1000);
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(1000);
+    }
+    
+  }
   sprintf(serial,"%X%X",chipId,flashChipId);
   digitalWrite(LED_BUILTIN, LOW);
 
-  if (!SPIFFS.begin()) {
-    Serial.println("Failed to mount file system");
-    return;
-  }
+  //delay(100);
 
   cfg = loadConfig();
   loadsConfig(&cfg);
-  endpoint = new Endpoint();
-  endpoint->setPin(cfg.pincode);
+  
+  
   endpoint->setDevSerial(serial);
   endpoint->setDevClass("DOOMDAYDEVICE");
   proto = new Protocol(endpoint, NULL);
@@ -124,6 +136,7 @@ void setup_prod() {
   esp->setup(endpoint, proto);
   setup(endpoint);
   digitalWrite(LED_BUILTIN, HIGH);
+  endpoint->setPin(cfg.pincode);
 }
 
 void loop_prod() {

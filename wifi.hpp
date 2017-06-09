@@ -78,6 +78,7 @@ class Esp {
         stopServer();
         stopClient();
         p->setStream(NULL);
+        e->state = 0;
       }
     }
 
