@@ -1,3 +1,13 @@
+#include "Doomsday8266.hpp"
+
+void setup(Endpoint* e) {
+
+}
+void loop(Endpoint* e) {
+
+}
+
+/*
 #include "DoomsDayIno.h"
 #include "wifi.hpp"
 #include "captive_portal.hpp"
@@ -24,23 +34,15 @@ void onStandby(TArg args){
   stateSensor->set(0);
 }
 
-*/
+
 void setup(Endpoint* e, Protocol* p) {
-  portal.setup();
+  
   pinMode(LED_BUILTIN, OUTPUT);
   e->setPin("111");
   e->setDevClass("DDD.DIY.TEST");
   e->setDevSerial("00001");  
   esp.setup(e, p);
-  /*
-  boil.on(onBoil);
-  standby.on(onStandby);
-
-  e->addSensor(&sens1);
-  e->addSensor(stateSensor);
-  e->addTrigger(&standby);
-  e->addTrigger(&boil);
-  */
+  
 }
 
 void loop(Endpoint* e, Protocol* p) {
@@ -57,4 +59,5 @@ void loop(Endpoint* e, Protocol* p) {
 
 
 }
+*/
 

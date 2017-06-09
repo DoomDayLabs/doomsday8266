@@ -117,11 +117,14 @@ R"(
             x.send(null);
             
         }
-            
-            
+
+
         function reboot(){
-            
+          var x = new XMLHttpRequest();                  
+            x.open('GET','/reboot',false);
+            x.send();
         }
+                             
             
             
         
@@ -164,7 +167,7 @@ R"(
             </div>
             <div class='pull-right'>
                 <a class='btn btn-success' id='save' onclick='saveData()'>Save</a>
-                <a class='btn btn-warning' id='reboot'>Reboot</a>
+                <a class='btn btn-warning' id='reboot' onclick='reboot()'>Reboot</a>
             </div>
         </form>
     </body>

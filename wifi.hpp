@@ -48,6 +48,7 @@ class Esp {
     }
 
     void setup(Endpoint* e, Protocol* p) {
+      WiFi.mode(WIFI_STA);
       WiFi.begin(ssid, pass);
     }
 

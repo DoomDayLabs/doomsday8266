@@ -21,8 +21,8 @@ typedef struct str_sensor {
 class Endpoint {
   private:
     const char* pincode = (char*)("12345");
-    const char* endpointClass = (char*)("");
-    const char* endpointSerial = (char*)("");
+    const char* endpointClass = (char*)("DEVICECLASS");
+    const char* endpointSerial = (char*)("DEVICESERIAL");
 
     str_trigger* trigger;
     str_sensor* sensor;

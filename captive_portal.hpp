@@ -75,14 +75,23 @@ class CaptivePortal {
         self->server.send(200, "text/html", "{}");
       });
 
+      server.on("/reboot", HTTP_GET, []() {
+        Serial.println("REBOOT");
+        ESP.restart();
+      });
+
       server.onNotFound([self]() {
+        
         self->server.send(200, "text/html", html);
       });
+
+      
 
       server.begin();
     }
     void loop() {
-      digitalWrite(LED_BUILTIN, LOW);
+      
+//      digitalWrite(LED_BUILTIN, LOW);
       digitalWrite(LED_BUILTIN, HIGH);
       dnsServer.processNextRequest();
       server.handleClient();
