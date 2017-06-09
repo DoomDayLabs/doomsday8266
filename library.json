@@ -1,0 +1,18 @@
+{
+  "name": "DoomsDay8266",
+  "keywords": "IoT",
+  "description": "DoomsDay protocol implementation framework for ESP8266",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DoomDayLabs/doomsday8266.git"
+  },
+  "version": "0.1.0",
+  "authors": {
+    "name": "Irokez Petrovic",
+    "url": "https://vk.com/irokezpetrovic"
+  },
+  "exclude": [
+  ],
+  "frameworks": "arduino",
+  "platforms": "*"
+}
