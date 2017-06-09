@@ -52,18 +52,18 @@ void loadsConfig(Config* cfg) {
   cfg->ssid = json["ssid"];
   cfg->pass = json["pass"];
   cfg->pincode = json["pincode"];
-  
-//  const char* serverName = json["serverName"];
-//  const char* accessToken = json["accessToken"];
+
+  //  const char* serverName = json["serverName"];
+  //  const char* accessToken = json["accessToken"];
 
   // Real world application would store these values in some variables for
   // later use.
 
   Serial.print("Loaded serverName: ");
-//  Serial.println(serverName);
+  //  Serial.println(serverName);
   Serial.print("Loaded accessToken: ");
-//  Serial.println(accessToken);
-//  return true;
+  //  Serial.println(accessToken);
+  //  return true;
 }
 
 
@@ -84,7 +84,7 @@ typedef void (*Loop)();
 
 CaptivePortal* portal;
 
-void setup_maint() {  
+void setup_maint() {
   portal = new CaptivePortal();
   portal->setup();
   digitalWrite(LED_BUILTIN, LOW);
@@ -100,18 +100,25 @@ Esp* esp;
 
 
 Config cfg;
+char* serial = "0000000000000000";
+int chipId = ESP.getChipId();
+int flashChipId = ESP.getFlashChipId();
+
 void setup_prod() {
+  sprintf(serial,"%X%X",chipId,flashChipId);
   digitalWrite(LED_BUILTIN, LOW);
 
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");
-    return;    
+    return;
   }
-  
+
   cfg = loadConfig();
   loadsConfig(&cfg);
   endpoint = new Endpoint();
-  endpoint->setPin(cfg.pincode);  
+  endpoint->setPin(cfg.pincode);
+  endpoint->setDevSerial(serial);
+  endpoint->setDevClass("DOOMDAYDEVICE");
   proto = new Protocol(endpoint, NULL);
   esp = new Esp(cfg.ssid, cfg.pass);
   esp->setup(endpoint, proto);
@@ -124,10 +131,16 @@ void loop_prod() {
   proto->read();
   loop(endpoint);
   proto->write();
-  
-  digitalWrite(LED_BUILTIN, LOW);
-  digitalWrite(LED_BUILTIN, HIGH);
-  
+  if (esp->wifiActive()) {
+    digitalWrite(LED_BUILTIN, LOW);
+    digitalWrite(LED_BUILTIN, HIGH);
+  } else {
+    digitalWrite(LED_BUILTIN, LOW);
+    delay(10);
+    digitalWrite(LED_BUILTIN, HIGH);
+    delay(10);
+  }
+
 }
 
 Setup fSetup;
@@ -138,7 +151,7 @@ void setup() {
   Serial.begin(115200);
   const rst_info * info = system_get_rst_info();
   int rst_reason = info->reason;
-  Serial.printf("Reason %d\r\n",rst_reason);
+  Serial.printf("Reason %d\r\n", rst_reason);
   if (rst_reason == 0) {
     fSetup = setup_maint;
     fLoop = loop_maint;

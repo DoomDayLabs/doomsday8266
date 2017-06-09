@@ -84,6 +84,10 @@ class Esp {
     bool connected() {
       return client.connected();
     }
+
+    bool wifiActive(){
+      return WiFi.status() == WL_CONNECTED;
+    }
 };
 
 
