@@ -16,7 +16,7 @@ class CaptivePortal {
     IPAddress apIP = IPAddress(192, 168, 1, 1);
     DNSServer dnsServer;
     ESP8266WebServer server = ESP8266WebServer(80);
-    char* defaultConfig = "{\"pincode\":\"12345678\"}";
+    char* defaultConfig = (char*)"{\"pincode\":\"12345678\"}";
 
 
     int loadConfig(char* buffer) {

@@ -104,7 +104,7 @@ Esp* esp;
 
 
 Config cfg;
-char* serial = "0000000000000000";
+char* serial = (char*)"0000000000000000";
 int chipId = ESP.getChipId();
 int flashChipId = ESP.getFlashChipId();
 
@@ -145,13 +145,18 @@ void loop_prod() {
   loop(endpoint);
   proto->write();
   if (esp->wifiActive()) {
-    digitalWrite(LED_BUILTIN, LOW);
+    //digitalWrite(LED_BUILTIN, LOW);
     digitalWrite(LED_BUILTIN, HIGH);
+    if (!esp->connected()){
+	delay(10);
+	digitalWrite(LED_BUILTIN, LOW);
+	delay(10);
+    }
   } else {
     digitalWrite(LED_BUILTIN, LOW);
-    delay(10);
+    delay(20);
     digitalWrite(LED_BUILTIN, HIGH);
-    delay(10);
+    delay(20);
   }
 
 }
